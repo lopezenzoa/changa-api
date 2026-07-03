@@ -81,14 +81,14 @@ public class FacilityService {
             throw new InvalidRequestFieldException("NAME CAN'T BE BLANK");
     }
 
-    private RequestFacilityDTO formatRequest(RequestFacilityDTO dto) {
+    protected RequestFacilityDTO formatRequest(RequestFacilityDTO dto) {
         return new RequestFacilityDTO(
                 dto.getName().trim().toUpperCase(),
                 dto.getDescription().trim().toUpperCase()
         );
     }
 
-    private Facility mapToEntity(RequestFacilityDTO dto) {
+    protected Facility mapToEntity(RequestFacilityDTO dto) {
         return new Facility(
                 null,
                 dto.getName(),
@@ -97,11 +97,30 @@ public class FacilityService {
         );
     }
 
-    private ResponseFacilityDTO mapToResponse(Facility entity) {
+    protected ResponseFacilityDTO mapToResponse(Facility entity) {
         return new ResponseFacilityDTO(
                 entity.getName(),
                 entity.getDescription(),
                 entity.getId()
         );
+    }
+
+    /* THIS IS USED INSIDE THE PACKAGE */
+    protected Facility save(RequestFacilityDTO request) {
+        checkRequestValidity(request);
+
+        /* FORMATTING REQUEST */
+        request = formatRequest(request);
+
+        /* SEARCHING BY NAME AN EXISTENT FACILITY */
+        Optional<Facility> facility = repository.findByName(request.getName());
+
+        if (facility.isEmpty()) {
+            /* CREATE NEW FACILITY */
+            return repository.save(mapToEntity(request));
+        }
+
+        /* USE FOUND FACILITY */
+        return facility.get();
     }
 }
