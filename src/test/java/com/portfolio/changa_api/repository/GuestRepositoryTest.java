@@ -18,7 +18,7 @@ class GuestRepositoryTest {
     private GuestRepository repository;
 
     @Test
-    void whenFindingByName_thenReturnAGuestOptional() {
+    void whenFindingByPhoneNumber_thenReturnAGuestOptional() {
         Guest entity = new GuestBuilder()
                 .setId(null)
                 .setFullName("Guest I")
@@ -28,7 +28,7 @@ class GuestRepositoryTest {
 
         repository.save(entity);
 
-        Optional<Guest> result = repository.findByFullName("Guest I");
+        Optional<Guest> result = repository.findByPhoneNumber("223 I");
 
         assertTrue(result.isPresent());
 
@@ -38,7 +38,7 @@ class GuestRepositoryTest {
     }
 
     @Test
-    void whenFindingByNonExistentOrNullName_thenReturnAnEmptyGuestOptional() {
+    void whenFindingByNonExistentOrNullPhoneNumber_thenReturnAnEmptyGuestOptional() {
         Guest entity = new GuestBuilder()
                 .setId(null)
                 .setFullName("Guest I")
@@ -48,8 +48,8 @@ class GuestRepositoryTest {
 
         repository.save(entity);
 
-        Optional<Guest> result = repository.findByFullName("Guest Non-Existent");
-        Optional<Guest> result_2 = repository.findByFullName(null);
+        Optional<Guest> result = repository.findByPhoneNumber("Guest Non-Existent Phone Number");
+        Optional<Guest> result_2 = repository.findByPhoneNumber(null);
 
         assertTrue(result.isEmpty());
         assertTrue(result_2.isEmpty());
