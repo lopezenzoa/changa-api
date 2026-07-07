@@ -2,10 +2,7 @@ package com.portfolio.changa_api.model;
 
 import com.portfolio.changa_api.shared.enums.States;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "shifts")
+@EqualsAndHashCode
 public class Shift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,22 +25,20 @@ public class Shift {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    @Column(nullable = false)
-    private String address;
+    @Column(name = "client_address", nullable = false)
+    private String clientAddress;
+
+    @Column(name = "client_full_name", nullable = false)
+    private String clientFullName;
+
+    @Column(name = "client_phone_number", nullable = false)
+    private String clientPhoneNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private States state;
 
-    @Column(nullable = false)
-    private Double cost;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "guest_id")
-    private Guest guest;
-
 }
