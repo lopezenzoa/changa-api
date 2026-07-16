@@ -2,10 +2,8 @@ package com.portfolio.changa_api.service;
 
 import com.portfolio.changa_api.model.Facility;
 import com.portfolio.changa_api.model.User;
-import com.portfolio.changa_api.repository.FacilityRepository;
 import com.portfolio.changa_api.repository.UserRepository;
 import com.portfolio.changa_api.shared.dtos.RequestUserDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseFacilityDTO;
 import com.portfolio.changa_api.shared.dtos.ResponseUserDTO;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
@@ -128,7 +126,7 @@ public class UserService {
         );
     }
 
-    private ResponseUserDTO mapToResponse(User entity) {
+    protected ResponseUserDTO mapToResponse(User entity) {
         return new ResponseUserDTO(
                 entity.getFullName(),
                 entity.getAddress(),
