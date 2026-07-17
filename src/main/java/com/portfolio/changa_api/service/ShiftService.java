@@ -9,28 +9,29 @@ import com.portfolio.changa_api.shared.dtos.ShiftResponse;
 import com.portfolio.changa_api.shared.enums.States;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
+import com.portfolio.changa_api.shared.formatters.ShiftFormatter;
+import com.portfolio.changa_api.shared.mappers.ShiftMapper;
+import com.portfolio.changa_api.shared.validators.ShiftValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ShiftService {
     @Autowired private ShiftRepository repository;
     @Autowired private UserRepository userRepository;
-    @Autowired private UserService userService;
 
-    @Autowired private Validator validator;
+    @Autowired private ShiftValidator validator;
+    @Autowired private ShiftMapper mapper;
+    @Autowired private ShiftFormatter formatter;
 
     public ShiftResponse request(ShiftRequest request) throws InvalidRequestFieldException, NotFoundException {
         /* VALIDATING THE REQUEST */
-        validateRequest(request);
+        validator.validate(request);
 
         /* INITIAL FORMATTING */
-        request = formatRequest(request);
+        request = formatter.format(request);
 
         /* SEARCHING THE USER BY ITS USERNAME */
         Optional<User> user = userRepository.findByUsername(request.userUsername());
@@ -39,12 +40,12 @@ public class ShiftService {
             throw new NotFoundException("USER '" + request.userUsername() + "' NOT FOUND");
 
         /* BUILDING THE ENTITY */
-        Shift entity = mapToEntity(request, user.get(), States.PENDING);
+        Shift entity = mapper.toEntity(request, user.get(), States.PENDING);
 
         /* SAVING THE ENTITY */
         Shift saved = repository.save(entity);
 
-        return mapToResponse(saved);
+        return mapper.toResponse(saved);
     }
 
     public ShiftResponse acceptShift(Long shiftId) throws InvalidRequestFieldException, NotFoundException {
@@ -53,7 +54,7 @@ public class ShiftService {
 
         Shift updated = update(entity);
 
-        return mapToResponse(updated);
+        return mapper.toResponse(updated);
     }
 
     public ShiftResponse cancelShift(Long shiftId) throws InvalidRequestFieldException, NotFoundException {
@@ -62,7 +63,7 @@ public class ShiftService {
 
         Shift updated = update(entity);
 
-        return mapToResponse(updated);
+        return mapper.toResponse(updated);
     }
 
     public ShiftResponse finishShift(Long shiftId) throws InvalidRequestFieldException, NotFoundException {
@@ -71,14 +72,7 @@ public class ShiftService {
 
         Shift updated = update(entity);
 
-        return mapToResponse(updated);
-    }
-
-    private void validateRequest(ShiftRequest request) throws InvalidRequestFieldException {
-        Set<ConstraintViolation<ShiftRequest>> violations = validator.validate(request);
-
-        if (!violations.isEmpty())
-            throw new InvalidRequestFieldException("ANY FIELD CAN'T BE BLANK");
+        return mapper.toResponse(updated);
     }
 
     private Shift getById(Long shiftId) throws InvalidRequestFieldException, NotFoundException {
@@ -98,42 +92,5 @@ public class ShiftService {
     private Shift update(Shift entity) throws InvalidRequestFieldException, NotFoundException {
         /* SEARCHING THE SHIFT */
         return repository.save(entity);
-    }
-
-    private ShiftRequest formatRequest(ShiftRequest request) {
-        return new ShiftRequest(
-                request.description().trim().toUpperCase(),
-                request.dateTime(),
-                request.clientAddress().trim().toUpperCase(),
-                request.clientFullName().trim().toUpperCase(),
-                request.clientPhoneNumber().trim().toUpperCase(),
-                request.userUsername().trim().toUpperCase()
-        );
-    }
-
-    private Shift mapToEntity(ShiftRequest request, User user, States state) {
-        return new Shift(
-                null,
-                request.description(),
-                request.dateTime(),
-                request.clientAddress(),
-                request.clientFullName(),
-                request.clientPhoneNumber(),
-                state,
-                user
-        );
-    }
-
-    private ShiftResponse mapToResponse(Shift entity) {
-        return new ShiftResponse(
-                entity.getId(),
-                entity.getDescription(),
-                entity.getDateTime(),
-                entity.getClientAddress(),
-                entity.getClientFullName(),
-                entity.getClientPhoneNumber(),
-                entity.getState(),
-                userService.mapToResponse(entity.getUser())
-        );
     }
 }

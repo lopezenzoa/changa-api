@@ -10,7 +10,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -29,20 +28,20 @@ class ShiftServiceTest {
     @Autowired private UserService userService;
 
     private ShiftRequest request;
-    private RequestUserDTO userRequest;
+    private UserRequest userRequest;
 
-    private ResponseUserDTO responseUser;
+    private UserResponse responseUser;
 
     @BeforeEach
     void setUp() {
-        RequestFacilityDTO facilityRequest = new RequestFacilityDTO(
+        FacilityRequest facilityRequest = new FacilityRequest(
                 "Facility I",
                 "Facility I"
         );
 
         facilityService.add(facilityRequest);
 
-        userRequest = new RequestUserDTO(
+        userRequest = new UserRequest(
                 "enzo",
                 "enzo",
                 "Enzo Agustín López",
