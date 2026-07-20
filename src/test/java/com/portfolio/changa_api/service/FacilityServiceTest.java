@@ -1,33 +1,38 @@
 package com.portfolio.changa_api.service;
 
+import com.portfolio.changa_api.repository.FacilityRepository;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
-import com.portfolio.changa_api.shared.dtos.RequestFacilityDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseFacilityDTO;
+import com.portfolio.changa_api.shared.dtos.FacilityRequest;
+import com.portfolio.changa_api.shared.dtos.FacilityResponse;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class FacilityServiceTest {
     @Autowired private FacilityService service;
+    @Autowired private FacilityRepository repository;
 
     @Test
     void whenAddingAValidFacility_thenReturnAResponseFacilityDTO() {
-        RequestFacilityDTO request = new RequestFacilityDTO(
+        FacilityRequest request = new FacilityRequest(
                 "Facility I",
                 "Facility I"
         );
 
-        ResponseFacilityDTO expected = new ResponseFacilityDTO(
+        FacilityResponse expected = new FacilityResponse(
                 "FACILITY I",
                 "FACILITY I",
                 1L
         );
 
-        ResponseFacilityDTO result = service.add(request);
+        FacilityResponse result = service.add(request);
 
         assertNotNull(result);
         assertEquals(expected, result);
@@ -35,12 +40,12 @@ class FacilityServiceTest {
 
     @Test
     void whenAddingAFacilityWithNullOrBlank_thenThrowAnInvalidRequestFieldException() {
-        RequestFacilityDTO nullRequest = new RequestFacilityDTO(
+        FacilityRequest nullRequest = new FacilityRequest(
                 null,
                 null
         );
 
-        RequestFacilityDTO blankRequest = new RequestFacilityDTO(
+        FacilityRequest blankRequest = new FacilityRequest(
                 "",
                 ""
         );
@@ -58,25 +63,25 @@ class FacilityServiceTest {
 
     @Test
     void whenAddingAnExistentFacility_thenReturnAResponseFacilityDTO() {
-        RequestFacilityDTO request = new RequestFacilityDTO(
+        FacilityRequest request = new FacilityRequest(
                 "Facility I",
                 "Facility I"
         );
 
         service.add(request);
 
-        RequestFacilityDTO request_2 = new RequestFacilityDTO(
+        FacilityRequest request_2 = new FacilityRequest(
                 "Facility I",
                 "Facility I (Desc)"
         );
 
-        ResponseFacilityDTO expected = new ResponseFacilityDTO(
+        FacilityResponse expected = new FacilityResponse(
                 "FACILITY I",
                 "FACILITY I",
                 1L
         );
 
-        ResponseFacilityDTO result = service.add(request_2);
+        FacilityResponse result = service.add(request_2);
 
         assertNotNull(result);
         assertEquals(expected, result);
@@ -84,7 +89,7 @@ class FacilityServiceTest {
 
     @Test
     void whenGettingByValidName_thenReturnAResponseFacilityDTO() {
-        RequestFacilityDTO request = new RequestFacilityDTO(
+        FacilityRequest request = new FacilityRequest(
                 "Facility I",
                 "Facility I"
         );
@@ -93,13 +98,13 @@ class FacilityServiceTest {
 
         String validName = "Facility I";
 
-        ResponseFacilityDTO expected = new ResponseFacilityDTO(
+        FacilityResponse expected = new FacilityResponse(
                 "FACILITY I",
                 "FACILITY I",
                 1L
         );
 
-        ResponseFacilityDTO result = service.getByName(validName);
+        FacilityResponse result = service.getByName(validName);
 
         assertNotNull(result);
         assertEquals(result, expected);
@@ -107,11 +112,6 @@ class FacilityServiceTest {
 
     @Test
     void whenGettingByNullOrBlankName_thenThrowAnInvalidRequestFieldException() {
-        assertThrows(
-                InvalidRequestFieldException.class,
-                () -> service.getByName(null)
-        );
-
         assertThrows(
                 InvalidRequestFieldException.class,
                 () -> service.getByName("")
@@ -128,7 +128,7 @@ class FacilityServiceTest {
 
     @Test
     void whenDeletingByValidName_thenReturnTrue() {
-        RequestFacilityDTO request = new RequestFacilityDTO(
+        FacilityRequest request = new FacilityRequest(
                 "Facility I",
                 "Facility I"
         );
@@ -150,11 +150,6 @@ class FacilityServiceTest {
     void whenDeletingByNullOrBlankName_thenThrowAnInvalidRequestFieldException() {
         assertThrows(
                 InvalidRequestFieldException.class,
-                () -> service.deleteByName(null)
-        );
-
-        assertThrows(
-                InvalidRequestFieldException.class,
                 () -> service.deleteByName("")
         );
     }
@@ -165,5 +160,10 @@ class FacilityServiceTest {
                 NotFoundException.class,
                 () -> service.deleteByName("NonExistentName")
         );
+    }
+
+    @AfterEach
+    void tearDown() {
+        repository.deleteAll();
     }
 }

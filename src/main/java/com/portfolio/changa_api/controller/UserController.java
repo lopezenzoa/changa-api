@@ -1,8 +1,8 @@
 package com.portfolio.changa_api.controller;
 
 import com.portfolio.changa_api.service.UserService;
-import com.portfolio.changa_api.shared.dtos.RequestUserDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseUserDTO;
+import com.portfolio.changa_api.shared.dtos.UserRequest;
+import com.portfolio.changa_api.shared.dtos.UserResponse;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
 import com.portfolio.changa_api.shared.exceptions.UniquenessViolationException;
@@ -32,7 +32,7 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User successfully created",
-                    content = @Content(schema = @Schema(implementation = ResponseUserDTO.class))
+                    content = @Content(schema = @Schema(implementation = UserResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -45,10 +45,10 @@ public class UserController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Details of the user being created",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = RequestUserDTO.class))
+                    content = @Content(schema = @Schema(implementation = UserRequest.class))
             )
             @RequestBody
-            RequestUserDTO request) {
+            UserRequest request) {
         try {
             return ResponseEntity.ok(service.add(request));
         } catch (InvalidRequestFieldException | UniquenessViolationException e) {
@@ -64,7 +64,7 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Users successfully retrieved",
-                    content = @Content(schema = @Schema(implementation = ResponseUserDTO.class))
+                    content = @Content(schema = @Schema(implementation = UserResponse.class))
             ),
             @ApiResponse(responseCode = "400", description = "The provided facility name is blank or invalid"),
             @ApiResponse(responseCode = "404", description = "No facility with the given name was found")

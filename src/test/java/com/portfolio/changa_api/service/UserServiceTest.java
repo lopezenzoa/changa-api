@@ -1,50 +1,54 @@
 package com.portfolio.changa_api.service;
 
-import com.portfolio.changa_api.shared.dtos.RequestFacilityDTO;
-import com.portfolio.changa_api.shared.dtos.RequestUserDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseFacilityDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseUserDTO;
+import com.portfolio.changa_api.repository.UserRepository;
+import com.portfolio.changa_api.shared.dtos.FacilityRequest;
+import com.portfolio.changa_api.shared.dtos.UserRequest;
+import com.portfolio.changa_api.shared.dtos.FacilityResponse;
+import com.portfolio.changa_api.shared.dtos.UserResponse;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
 import com.portfolio.changa_api.shared.exceptions.UniquenessViolationException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserServiceTest {
     @Autowired private UserService service;
+    @Autowired private UserRepository repository;
 
     @Test
     void whenAddingAValidUser_thenReturnAResponseUserDTO() {
-        RequestUserDTO request = new RequestUserDTO(
+        UserRequest request = new UserRequest(
                 "enzo",
                 "enzo",
                 "Enzo Agustín López",
                 "3 de Febrero 5074",
                 "223 600 4953",
                 "LC-123456",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
         );
 
-        ResponseUserDTO result = service.add(request);
+        UserResponse result = service.add(request);
 
-        ResponseUserDTO expected = new ResponseUserDTO(
+        UserResponse expected = new UserResponse(
                 "ENZO AGUSTÍN LÓPEZ",
                 "3 DE FEBRERO 5074",
                 "223 600 4953",
                 "LC-123456",
-                new ResponseFacilityDTO(
+                new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -54,55 +58,55 @@ class UserServiceTest {
 
     @Test
     void whenAddingATwoValidUsers_thenReturnAResponseUserDTO() {
-        RequestUserDTO request_1 = new RequestUserDTO(
+        UserRequest request_1 = new UserRequest(
                 "enzo",
                 "enzo",
                 "Enzo Agustín López",
                 "3 de Febrero 5074",
                 "223 600 4953",
                 "LC-123456",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
         );
 
-        RequestUserDTO request_2 = new RequestUserDTO(
+        UserRequest request_2 = new UserRequest(
                 "enzo 2",
                 "enzo 2",
                 "Enzo Agustín López 2",
                 "3 de Febrero 5074 2",
                 "223 600 4953 2",
                 "LC-123456 2",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
         );
 
-        ResponseUserDTO result_1 = service.add(request_1);
-        ResponseUserDTO result_2 = service.add(request_2);
+        UserResponse result_1 = service.add(request_1);
+        UserResponse result_2 = service.add(request_2);
 
-        ResponseUserDTO expected_1 = new ResponseUserDTO(
+        UserResponse expected_1 = new UserResponse(
                 "ENZO AGUSTÍN LÓPEZ",
                 "3 DE FEBRERO 5074",
                 "223 600 4953",
                 "LC-123456",
-                new ResponseFacilityDTO(
+                new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
 
-        ResponseUserDTO expected_2 = new ResponseUserDTO(
+        UserResponse expected_2 = new UserResponse(
                 "ENZO AGUSTÍN LÓPEZ 2",
                 "3 DE FEBRERO 5074 2",
                 "223 600 4953 2",
                 "LC-123456 2",
-                new ResponseFacilityDTO(
+                new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -113,29 +117,29 @@ class UserServiceTest {
 
     @Test
     void whenAddingAValidUserWithNoLicenseNumber_thenReturnAResponseUserDTOWithRandomLicenseNumber() {
-        RequestUserDTO request = new RequestUserDTO(
+        UserRequest request = new UserRequest(
                 "enzo",
                 "enzo",
                 "Enzo Agustín López",
                 "3 de Febrero 5074",
                 "223 600 4953",
                 "",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
         );
 
-        ResponseUserDTO result = service.add(request);
+        UserResponse result = service.add(request);
 
-        ResponseUserDTO expected = new ResponseUserDTO(
+        UserResponse expected = new UserResponse(
                 "ENZO AGUSTÍN LÓPEZ",
                 "3 DE FEBRERO 5074",
                 "223 600 4953",
                 result.licenseNumber(),
-                new ResponseFacilityDTO(
+                new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -145,14 +149,14 @@ class UserServiceTest {
 
     @Test
     void whenAddingAnUserWithAnyEmptyField_thenThrowAnInvalidRequestFieldException() {
-        RequestUserDTO request = new RequestUserDTO(
+        UserRequest request = new UserRequest(
                 "",
                 "",
                 "",
                 "",
                 "",
                 "",
-                new RequestFacilityDTO("", "")
+                new FacilityRequest("", "")
         );
 
         assertThrows(
@@ -163,29 +167,29 @@ class UserServiceTest {
 
     @Test
     void whenAddingADuplicatedUser_thenThrowAnUniquenessViolationException() {
-        RequestUserDTO request = new RequestUserDTO(
+        UserRequest request = new UserRequest(
                 "enzo",
                 "enzo",
                 "Enzo Agustín López",
                 "3 de Febrero 5074",
                 "223 600 4953",
                 "",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
         );
 
-        ResponseUserDTO result = service.add(request);
+        UserResponse result = service.add(request);
 
-        ResponseUserDTO expected = new ResponseUserDTO(
+        UserResponse expected = new UserResponse(
                 "ENZO AGUSTÍN LÓPEZ",
                 "3 DE FEBRERO 5074",
                 "223 600 4953",
                 result.licenseNumber(),
-                new ResponseFacilityDTO(
+                new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -200,27 +204,27 @@ class UserServiceTest {
 
     @Test
     void whenGettingByFacilityName_thenReturnAListOfUserResponseDTO() {
-        RequestUserDTO request_1 = new RequestUserDTO(
+        UserRequest request_1 = new UserRequest(
                 "enzo",
                 "enzo",
                 "Enzo Agustín López",
                 "3 de Febrero 5074",
                 "223 600 4953",
                 "LC-123456",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
         );
 
-        RequestUserDTO request_2 = new RequestUserDTO(
+        UserRequest request_2 = new UserRequest(
                 "enzo 2",
                 "enzo 2",
                 "Enzo Agustín López 2",
                 "3 de Febrero 5074 2",
                 "223 600 4953 2",
                 "LC-123456 2",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
@@ -229,28 +233,28 @@ class UserServiceTest {
         service.add(request_1);
         service.add(request_2);
 
-        List<ResponseUserDTO> resultList = service.getByFacilityName("Programador");
+        List<UserResponse> resultList = service.getByFacilityName("Programador");
 
-        List<ResponseUserDTO> expectedList = List.of(
-                new ResponseUserDTO(
+        List<UserResponse> expectedList = List.of(
+                new UserResponse(
                         "ENZO AGUSTÍN LÓPEZ",
                         "3 DE FEBRERO 5074",
                         "223 600 4953",
                         "LC-123456",
-                        new ResponseFacilityDTO(
+                        new FacilityResponse(
                                 "PROGRAMADOR",
-                                "PROGRAMDOR (DESC)",
+                                "PROGRAMADOR (DESC)",
                                 1L
                         )
                 ),
-                new ResponseUserDTO(
+                new UserResponse(
                         "ENZO AGUSTÍN LÓPEZ 2",
                         "3 DE FEBRERO 5074 2",
                         "223 600 4953 2",
                         "LC-123456 2",
-                        new ResponseFacilityDTO(
+                        new FacilityResponse(
                                 "PROGRAMADOR",
-                                "PROGRAMDOR (DESC)",
+                                "PROGRAMADOR (DESC)",
                                 1L
                         )
                 )
@@ -261,27 +265,27 @@ class UserServiceTest {
 
     @Test
     void whenGettingByFacilityNameWithNoUsers_thenThrowANotFoundException() {
-        RequestUserDTO request_1 = new RequestUserDTO(
+        UserRequest request_1 = new UserRequest(
                 "enzo",
                 "enzo",
                 "Enzo Agustín López",
                 "3 de Febrero 5074",
                 "223 600 4953",
                 "LC-123456",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
         );
 
-        RequestUserDTO request_2 = new RequestUserDTO(
+        UserRequest request_2 = new UserRequest(
                 "enzo 2",
                 "enzo 2",
                 "Enzo Agustín López 2",
                 "3 de Febrero 5074 2",
                 "223 600 4953 2",
                 "LC-123456 2",
-                new RequestFacilityDTO(
+                new FacilityRequest(
                         "Programador",
                         "Programador (Desc)"
                 )
@@ -295,5 +299,10 @@ class UserServiceTest {
                 NotFoundException.class,
                 () -> service.getByFacilityName("Mecanico")
         );
+    }
+
+    @AfterEach
+    void tearDown() {
+        repository.deleteAll();
     }
 }

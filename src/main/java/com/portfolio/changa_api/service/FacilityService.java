@@ -3,41 +3,46 @@ package com.portfolio.changa_api.service;
 import com.portfolio.changa_api.model.Facility;
 import com.portfolio.changa_api.repository.FacilityRepository;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
-import com.portfolio.changa_api.shared.dtos.RequestFacilityDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseFacilityDTO;
+import com.portfolio.changa_api.shared.dtos.FacilityRequest;
+import com.portfolio.changa_api.shared.dtos.FacilityResponse;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
+import com.portfolio.changa_api.shared.formatters.FacilityFormatter;
+import com.portfolio.changa_api.shared.mappers.FacilityMapper;
+import com.portfolio.changa_api.shared.validators.FacilityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
 public class FacilityService {
     @Autowired private FacilityRepository repository;
+    @Autowired private FacilityMapper mapper;
+    @Autowired private FacilityValidator validator;
+    @Autowired private FacilityFormatter formatter;
 
-    public ResponseFacilityDTO add(RequestFacilityDTO request) throws InvalidRequestFieldException {
-        checkRequestValidity(request);
+    public FacilityResponse add(FacilityRequest request) throws InvalidRequestFieldException {
+        validator.validate(request);
 
         /* FORMATTING REQUEST */
-        request = formatRequest(request);
+        request = formatter.format(request);
 
         /* SEARCHING BY NAME AN EXISTENT FACILITY */
-        Optional<Facility> facility = repository.findByName(request.getName());
+        Optional<Facility> facility = repository.findByName(request.name());
 
         if (facility.isEmpty()) {
             /* CREATE NEW FACILITY */
-            Facility saved = repository.save(mapToEntity(request));
+            Facility saved = repository.save(mapper.toEntity(request));
 
-            return mapToResponse(saved);
+            return mapper.toResponse(saved);
         }
 
         /* USE FOUND FACILITY */
-        return mapToResponse(facility.get());
+        return mapper.toResponse(facility.get());
     }
 
-    public ResponseFacilityDTO getByName(String name) throws NotFoundException, InvalidRequestFieldException {
-        checkNameValidity(name);
+    public FacilityResponse getByName(String name) throws NotFoundException, InvalidRequestFieldException {
+        validator.validate(name);
 
         /* FORMATTING PARAM */
         name = name.trim().toUpperCase();
@@ -47,11 +52,11 @@ public class FacilityService {
         if (facility.isEmpty())
             throw new NotFoundException("FACILITY WITH NAME '" + name + "' NOT FOUND");
 
-        return mapToResponse(facility.get());
+        return mapper.toResponse(facility.get());
     }
 
     public Boolean deleteByName(String name) throws InvalidRequestFieldException, NotFoundException {
-        checkNameValidity(name);
+        validator.validate(name);
 
         /* FORMATTING PARAM */
         name = name.trim().toUpperCase();
@@ -66,58 +71,19 @@ public class FacilityService {
         return true;
     }
 
-    private void checkRequestValidity(RequestFacilityDTO dto) throws InvalidRequestFieldException {
-        if (dto.getName() == null || dto.getDescription() == null)
-            throw new InvalidRequestFieldException("NAME OR DESCRIPTION CAN'T BE NULL");
-
-        if (dto.getName().trim().isEmpty() || dto.getDescription().trim().isEmpty())
-            throw new InvalidRequestFieldException("NAME OR DESCRIPTION CAN'T BE BLANK");
-    }
-
-    private void checkNameValidity(String name) {
-        if (name == null)
-            throw new InvalidRequestFieldException("NAME CAN'T BE NULL");
-        if (name.trim().isEmpty())
-            throw new InvalidRequestFieldException("NAME CAN'T BE BLANK");
-    }
-
-    protected RequestFacilityDTO formatRequest(RequestFacilityDTO dto) {
-        return new RequestFacilityDTO(
-                dto.getName().trim().toUpperCase(),
-                dto.getDescription().trim().toUpperCase()
-        );
-    }
-
-    protected Facility mapToEntity(RequestFacilityDTO dto) {
-        return new Facility(
-                null,
-                dto.getName(),
-                dto.getDescription(),
-                new ArrayList<>()
-        );
-    }
-
-    protected ResponseFacilityDTO mapToResponse(Facility entity) {
-        return new ResponseFacilityDTO(
-                entity.getName(),
-                entity.getDescription(),
-                entity.getId()
-        );
-    }
-
     /* THIS IS USED INSIDE THE PACKAGE */
-    protected Facility save(RequestFacilityDTO request) {
-        checkRequestValidity(request);
+    protected Facility save(FacilityRequest request) {
+        validator.validate(request);
 
         /* FORMATTING REQUEST */
-        request = formatRequest(request);
+        request = formatter.format(request);
 
         /* SEARCHING BY NAME AN EXISTENT FACILITY */
-        Optional<Facility> facility = repository.findByName(request.getName());
+        Optional<Facility> facility = repository.findByName(request.name());
 
         if (facility.isEmpty()) {
             /* CREATE NEW FACILITY */
-            return repository.save(mapToEntity(request));
+            return repository.save(mapper.toEntity(request));
         }
 
         /* USE FOUND FACILITY */
