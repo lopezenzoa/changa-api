@@ -1,5 +1,13 @@
 package com.portfolio.changa_api.shared.dtos;
 
-public record UserRequest(String username, String password, String fullName, String address, String phoneNumber,
-                          String licenseNumber, FacilityRequest facility) {
+import jakarta.validation.constraints.NotBlank;
+
+public record UserRequest(
+        @NotBlank String username,
+        @NotBlank String password,
+        @NotBlank String fullName,
+        @NotBlank String address,
+        @NotBlank String phoneNumber,
+        String licenseNumber,
+        FacilityRequest facility) {
 }

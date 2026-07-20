@@ -5,24 +5,24 @@ import com.portfolio.changa_api.repository.UserRepository;
 import com.portfolio.changa_api.shared.dtos.UserRequest;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
 import com.portfolio.changa_api.shared.exceptions.UniquenessViolationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class UserValidator {
     @Autowired private UserRepository repository;
+    @Autowired private Validator validator;
 
     public void validate(UserRequest request) {
-        if (
-                request.username().trim().isEmpty()
-                        || request.password().trim().isEmpty()
-                        || request.fullName().trim().isEmpty()
-                        || request.address().trim().isEmpty()
-                        || request.phoneNumber().trim().isEmpty()
-        )
-            throw new InvalidRequestFieldException("ANY FIELD CAN'T BE EMPTY");
+        Set<ConstraintViolation<UserRequest>> violations = validator.validate(request);
+
+        if (!violations.isEmpty())
+            throw new InvalidRequestFieldException("ANY FIELD CAN'T BE BLANK");
     }
 
     public void validateUniqueness(UserRequest request) {

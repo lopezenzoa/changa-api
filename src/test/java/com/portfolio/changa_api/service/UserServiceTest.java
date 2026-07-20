@@ -48,7 +48,7 @@ class UserServiceTest {
                 "LC-123456",
                 new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -94,7 +94,7 @@ class UserServiceTest {
                 "LC-123456",
                 new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -106,7 +106,7 @@ class UserServiceTest {
                 "LC-123456 2",
                 new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -139,7 +139,7 @@ class UserServiceTest {
                 result.licenseNumber(),
                 new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -189,7 +189,7 @@ class UserServiceTest {
                 result.licenseNumber(),
                 new FacilityResponse(
                         "PROGRAMADOR",
-                        "PROGRAMDOR (DESC)",
+                        "PROGRAMADOR (DESC)",
                         1L
                 )
         );
@@ -243,7 +243,7 @@ class UserServiceTest {
                         "LC-123456",
                         new FacilityResponse(
                                 "PROGRAMADOR",
-                                "PROGRAMDOR (DESC)",
+                                "PROGRAMADOR (DESC)",
                                 1L
                         )
                 ),
@@ -254,7 +254,7 @@ class UserServiceTest {
                         "LC-123456 2",
                         new FacilityResponse(
                                 "PROGRAMADOR",
-                                "PROGRAMDOR (DESC)",
+                                "PROGRAMADOR (DESC)",
                                 1L
                         )
                 )

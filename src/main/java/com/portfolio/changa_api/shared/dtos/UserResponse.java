@@ -1,5 +1,11 @@
 package com.portfolio.changa_api.shared.dtos;
 
-public record UserResponse(String fullName, String address, String phoneNumber, String licenseNumber,
-                           FacilityResponse facility) {
+import jakarta.validation.constraints.NotBlank;
+
+public record UserResponse(
+        @NotBlank String fullName,
+        @NotBlank String address,
+        @NotBlank String phoneNumber,
+        @NotBlank String licenseNumber,
+        FacilityResponse facility) {
 }
