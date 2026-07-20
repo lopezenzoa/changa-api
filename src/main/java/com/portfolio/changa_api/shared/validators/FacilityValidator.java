@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class FacilityValidator {
     public void validate(FacilityRequest dto) throws InvalidRequestFieldException {
-        if (dto.getName() == null || dto.getDescription() == null)
+        if (dto.name() == null || dto.description() == null)
             throw new InvalidRequestFieldException("NAME OR DESCRIPTION CAN'T BE NULL");
 
-        if (dto.getName().trim().isEmpty() || dto.getDescription().trim().isEmpty())
+        if (dto.name().trim().isEmpty() || dto.description().trim().isEmpty())
             throw new InvalidRequestFieldException("NAME OR DESCRIPTION CAN'T BE BLANK");
     }
 

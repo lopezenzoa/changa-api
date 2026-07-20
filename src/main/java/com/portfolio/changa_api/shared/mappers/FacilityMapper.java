@@ -12,8 +12,8 @@ public class FacilityMapper {
     public Facility toEntity(FacilityRequest request) {
         return new Facility(
                 null,
-                request.getName(),
-                request.getDescription(),
+                request.name(),
+                request.description(),
                 new ArrayList<>()
         );
     }

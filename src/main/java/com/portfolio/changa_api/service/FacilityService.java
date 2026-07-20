@@ -28,7 +28,7 @@ public class FacilityService {
         request = formatter.format(request);
 
         /* SEARCHING BY NAME AN EXISTENT FACILITY */
-        Optional<Facility> facility = repository.findByName(request.getName());
+        Optional<Facility> facility = repository.findByName(request.name());
 
         if (facility.isEmpty()) {
             /* CREATE NEW FACILITY */
@@ -79,7 +79,7 @@ public class FacilityService {
         request = formatter.format(request);
 
         /* SEARCHING BY NAME AN EXISTENT FACILITY */
-        Optional<Facility> facility = repository.findByName(request.getName());
+        Optional<Facility> facility = repository.findByName(request.name());
 
         if (facility.isEmpty()) {
             /* CREATE NEW FACILITY */

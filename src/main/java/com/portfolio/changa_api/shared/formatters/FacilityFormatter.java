@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 public class FacilityFormatter {
     public FacilityRequest format(FacilityRequest dto) {
         return new FacilityRequest(
-                dto.getName().trim().toUpperCase(),
-                dto.getDescription().trim().toUpperCase()
+                dto.name().trim().toUpperCase(),
+                dto.description().trim().toUpperCase()
         );
     }
 }
