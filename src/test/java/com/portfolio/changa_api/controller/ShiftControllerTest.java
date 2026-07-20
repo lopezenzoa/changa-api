@@ -17,7 +17,6 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -50,12 +49,12 @@ class ShiftControllerTest {
                 "CLIENT FULL NAME",
                 "223 600",
                 States.PENDING,
-                new ResponseUserDTO(
+                new UserResponse(
                         "ENZO AGUSTÍN LÓPEZ",
                         "3 DE FEBRERO 5074",
                         "223 600 4953",
                         "LC-123456",
-                        new ResponseFacilityDTO(
+                        new FacilityResponse(
                                 "FACILITY I",
                                 "FACILITY I (DESC)",
                                 1L
@@ -82,8 +81,8 @@ class ShiftControllerTest {
                 .andExpect(jsonPath("$.user.phoneNumber").value(expected.user().phoneNumber()))
                 .andExpect(jsonPath("$.user.licenseNumber").value(expected.user().licenseNumber()))
 
-                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().getName()))
-                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().getDescription()));
+                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().name()))
+                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().description()));
     }
 
     @Test
@@ -143,12 +142,12 @@ class ShiftControllerTest {
                 "CLIENT FULL NAME",
                 "223 600",
                 States.ACCEPTED,
-                new ResponseUserDTO(
+                new UserResponse(
                         "ENZO AGUSTÍN LÓPEZ",
                         "3 DE FEBRERO 5074",
                         "223 600 4953",
                         "LC-123456",
-                        new ResponseFacilityDTO(
+                        new FacilityResponse(
                                 "FACILITY I",
                                 "FACILITY I (DESC)",
                                 1L
@@ -171,8 +170,8 @@ class ShiftControllerTest {
                 .andExpect(jsonPath("$.user.phoneNumber").value(expected.user().phoneNumber()))
                 .andExpect(jsonPath("$.user.licenseNumber").value(expected.user().licenseNumber()))
 
-                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().getName()))
-                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().getDescription()));
+                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().name()))
+                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().description()));
     }
 
     @Test
@@ -197,12 +196,12 @@ class ShiftControllerTest {
                 "CLIENT FULL NAME",
                 "223 600",
                 States.CANCELLED,
-                new ResponseUserDTO(
+                new UserResponse(
                         "ENZO AGUSTÍN LÓPEZ",
                         "3 DE FEBRERO 5074",
                         "223 600 4953",
                         "LC-123456",
-                        new ResponseFacilityDTO(
+                        new FacilityResponse(
                                 "FACILITY I",
                                 "FACILITY I (DESC)",
                                 1L
@@ -225,8 +224,8 @@ class ShiftControllerTest {
                 .andExpect(jsonPath("$.user.phoneNumber").value(expected.user().phoneNumber()))
                 .andExpect(jsonPath("$.user.licenseNumber").value(expected.user().licenseNumber()))
 
-                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().getName()))
-                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().getDescription()));
+                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().name()))
+                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().description()));
     }
 
     @Test
@@ -251,12 +250,12 @@ class ShiftControllerTest {
                 "CLIENT FULL NAME",
                 "223 600",
                 States.FINISHED,
-                new ResponseUserDTO(
+                new UserResponse(
                         "ENZO AGUSTÍN LÓPEZ",
                         "3 DE FEBRERO 5074",
                         "223 600 4953",
                         "LC-123456",
-                        new ResponseFacilityDTO(
+                        new FacilityResponse(
                                 "FACILITY I",
                                 "FACILITY I (DESC)",
                                 1L
@@ -279,8 +278,8 @@ class ShiftControllerTest {
                 .andExpect(jsonPath("$.user.phoneNumber").value(expected.user().phoneNumber()))
                 .andExpect(jsonPath("$.user.licenseNumber").value(expected.user().licenseNumber()))
 
-                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().getName()))
-                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().getDescription()));
+                .andExpect(jsonPath("$.user.facility.name").value(expected.user().facility().name()))
+                .andExpect(jsonPath("$.user.facility.description").value(expected.user().facility().description()));
     }
 
     @Test
