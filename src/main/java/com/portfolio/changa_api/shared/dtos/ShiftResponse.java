@@ -12,6 +12,6 @@ public record ShiftResponse(
         String clientFullName,
         String clientPhoneNumber,
         States state,
-        ResponseUserDTO user
+        UserResponse user
 ) {
 }
