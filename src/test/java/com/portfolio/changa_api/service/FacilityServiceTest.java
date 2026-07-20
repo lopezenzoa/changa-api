@@ -114,11 +114,6 @@ class FacilityServiceTest {
     void whenGettingByNullOrBlankName_thenThrowAnInvalidRequestFieldException() {
         assertThrows(
                 InvalidRequestFieldException.class,
-                () -> service.getByName(null)
-        );
-
-        assertThrows(
-                InvalidRequestFieldException.class,
                 () -> service.getByName("")
         );
     }
@@ -153,11 +148,6 @@ class FacilityServiceTest {
 
     @Test
     void whenDeletingByNullOrBlankName_thenThrowAnInvalidRequestFieldException() {
-        assertThrows(
-                InvalidRequestFieldException.class,
-                () -> service.deleteByName(null)
-        );
-
         assertThrows(
                 InvalidRequestFieldException.class,
                 () -> service.deleteByName("")

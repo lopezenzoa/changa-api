@@ -1,3 +1,8 @@
 package com.portfolio.changa_api.shared.dtos;
 
-public record FacilityRequest(String name, String description) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record FacilityRequest(
+        @NotBlank String name,
+        @NotBlank String description
+) {}

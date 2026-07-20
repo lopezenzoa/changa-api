@@ -1,8 +1,8 @@
 package com.portfolio.changa_api.controller;
 
 import com.portfolio.changa_api.service.FacilityService;
-import com.portfolio.changa_api.shared.dtos.RequestFacilityDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseFacilityDTO;
+import com.portfolio.changa_api.shared.dtos.FacilityRequest;
+import com.portfolio.changa_api.shared.dtos.FacilityResponse;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,11 +25,11 @@ public class FacilityController {
     @Operation(summary = "Create a new facility")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Facility created successfully",
-                    content = @Content(schema = @Schema(implementation = ResponseFacilityDTO.class))),
+                    content = @Content(schema = @Schema(implementation = FacilityResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content)
     })
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody RequestFacilityDTO request) {
+    public ResponseEntity<?> add(@RequestBody FacilityRequest request) {
         try {
             return ResponseEntity.ok(service.add(request));
         } catch (InvalidRequestFieldException e) {
@@ -40,7 +40,7 @@ public class FacilityController {
     @Operation(summary = "Get a facility by name")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Facility found",
-                    content = @Content(schema = @Schema(implementation = ResponseFacilityDTO.class))),
+                    content = @Content(schema = @Schema(implementation = FacilityResponse.class))),
             @ApiResponse(responseCode = "404", description = "Facility not found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid name provided", content = @Content)
     })

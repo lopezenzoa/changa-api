@@ -1,8 +1,8 @@
 package com.portfolio.changa_api.controller;
 
 import com.portfolio.changa_api.service.FacilityService;
-import com.portfolio.changa_api.shared.dtos.RequestFacilityDTO;
-import com.portfolio.changa_api.shared.dtos.ResponseFacilityDTO;
+import com.portfolio.changa_api.shared.dtos.FacilityRequest;
+import com.portfolio.changa_api.shared.dtos.FacilityResponse;
 import com.portfolio.changa_api.shared.exceptions.InvalidRequestFieldException;
 import com.portfolio.changa_api.shared.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,12 @@ class FacilityControllerTest {
 
     @Test
     void whenAddingAValidFacility_thenReturnA200WithResponseFacilityDTO() throws Exception {
-        RequestFacilityDTO request = new RequestFacilityDTO(
+        FacilityRequest request = new FacilityRequest(
                 "Facility I",
                 "Facility I"
         );
 
-        ResponseFacilityDTO expected = new ResponseFacilityDTO(
+        FacilityResponse expected = new FacilityResponse(
                 "FACILITY I",
                 "FACILITY I",
                 1L
@@ -48,18 +48,18 @@ class FacilityControllerTest {
                         .content(mapper.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(expected.getName()))
-                .andExpect(jsonPath("$.description").value(expected.getDescription()));
+                .andExpect(jsonPath("$.name").value(expected.name()))
+                .andExpect(jsonPath("$.description").value(expected.description()));
     }
 
     @Test
     void whenAddingAFacilityNullOrBlank_thenReturnA400WithNoBody() throws Exception {
-        RequestFacilityDTO nullRequest = new RequestFacilityDTO(
+        FacilityRequest nullRequest = new FacilityRequest(
                 null,
                 null
         );
 
-        RequestFacilityDTO blankRequest = new RequestFacilityDTO(
+        FacilityRequest blankRequest = new FacilityRequest(
                 "",
                 ""
         );
@@ -86,7 +86,7 @@ class FacilityControllerTest {
     void whenGettingByValidName_thenReturnA200ResponseFacilityDTO() throws Exception {
         String validName = "Facility I";
 
-        ResponseFacilityDTO expected = new ResponseFacilityDTO(
+        FacilityResponse expected = new FacilityResponse(
                 "FACILITY I",
                 "FACILITY I",
                 1L
@@ -96,8 +96,8 @@ class FacilityControllerTest {
 
         mockMvc.perform(get("/api/facility/" + validName))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(expected.getName()))
-                .andExpect(jsonPath("$.description").value(expected.getDescription()));;
+                .andExpect(jsonPath("$.name").value(expected.name()))
+                .andExpect(jsonPath("$.description").value(expected.description()));;
     }
 
     @Test
